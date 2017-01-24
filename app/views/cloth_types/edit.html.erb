@@ -1,0 +1,14 @@
+<h3>Update Cloth Type</h3>
+
+<%= form_for @cloth_type, url: {action: "update"} do |f| %>
+    <%= f.label :name %>
+    <%= f.text_field :name, :value => @cloth_type.name %>
+    <br>
+    <%= f.label :laundry_price %>
+    <%= f.text_field :laundry_price, :value => @cloth_type.laundry_price %>
+    <br>
+    <%= f.label :dryclean_price %>
+    <%= f.text_field :dryclean_price, :value => @cloth_type.dryclean_price %>
+    <br>
+    <%= f.submit "Update Cloth Type" %>
+<% end %>

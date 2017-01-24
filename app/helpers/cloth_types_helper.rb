@@ -1,0 +1,2 @@
+module ClothTypesHelper
+end

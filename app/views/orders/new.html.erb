@@ -1,0 +1,28 @@
+<script type="text/javascript">
+    $(document).on("focus", "[data-behaviour~='datepicker']", function(e){
+        $(this).datepicker({"format": "yyyy-mm-dd", "weekStart": 1, "autoclose": true})
+    });
+
+    $(document).on("focus", "[data-behaviour~='timepicker']", function(e){
+        $(this).timepicker()
+    });
+</script>
+
+<h3>Make an Order</h3>
+
+<%= form_for @order, url: {action: "create"} do |f| %>
+    <%= f.label :laundry_store %>
+    <%= f.select(:laundry_store_id,[['None', 0]] +  @nearby_laundry_stores.collect{|t| [t.name, t.id]}) %>
+    <br>
+    <%= f.label :dryclean_store %>
+    <%= f.select(:dryclean_store_id,[['None', 0]] +  @nearby_dryclean_stores.collect{|t| [t.name, t.id]}) %>
+    <br>
+    <%= f.label :pickup_date %>
+    <%= f.text_field :to_pick_date, 'data-behaviour' => 'datepicker' %>
+    <br>
+    <%= f.label :pickup_time %>
+    <%= f.text_field :to_pick_time, 'data-behaviour' => 'timepicker' %>
+    <br>
+    <%= f.hidden_field :address_id, :value => params['address_id'] %>
+    <%= f.submit "Place Order" %>
+<% end %>

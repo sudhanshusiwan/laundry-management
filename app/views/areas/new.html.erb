@@ -1,0 +1,9 @@
+<h3>Add Area</h3>
+
+<%= form_for @area, url: {action: "create"} do |f| %>
+    <%= f.label :area_name %>
+    <%= f.text_field :name %>
+    <%= flash[:error] %>
+    <br>
+    <%= f.submit "Add Area" %>
+<% end %>

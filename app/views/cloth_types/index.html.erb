@@ -1,0 +1,35 @@
+<table border="1">
+  <th colspan="7">
+    Price List
+  </th>
+  <tr>
+    <td>Id</td>
+    <td>Cloth Name</td>
+    <td>Laundry Price</td>
+    <td>Dryclean Price</td>
+    <% if current_user.admin? %>
+      <td>Edit Cloth Type</td>
+      <td>Remove</td>
+    <% end %>
+  </tr>
+  <% if @cloth_types.nil? %>
+      <tr>
+        <td colspan="3">There is Nothig to display</td>
+      </tr>
+  <% else %>
+      <% @cloth_types.each do |cloth_type| %>
+          <tr>
+            <td><%= cloth_type.id %></td>
+            <td><%= cloth_type.name %></td>
+            <td><%= cloth_type.laundry_price %></td>
+            <td><%= cloth_type.dryclean_price %></td>
+            <% if current_user.admin? %>
+                <td><%= link_to 'Edit Cloth Type', edit_cloth_type_path(:id => cloth_type.id) %></td>
+                <td><%= link_to 'Remove', cloth_type_path(:id => cloth_type.id),
+                                method: :delete,
+                                data: { confirm: 'Are you sure?' } %></td>
+            <% end %>
+          </tr>
+      <% end %>
+  <% end %>
+</table>

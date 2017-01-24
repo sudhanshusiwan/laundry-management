@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Washbee</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+
+<p class="navbar-text pull-right">
+  <% if user_signed_in? %>
+      <%= link_to 'Home', root_path, :class => 'navbar-link' %> |
+      <%= link_to 'Price List', cloth_types_path, :class => 'navbar-link' %> |
+      <% if current_user.customer? %>
+          <%= link_to 'New Order', new_order_path, :class => 'navbar-link' %> |
+          <%= link_to 'Addresses', user_addresses_path(:user_id => current_user.id), :class => 'navbar-link' %> |
+      <% end %>
+      <% if current_user.store_owner? and current_user.store.nil? %>
+          <%= link_to 'New Store', new_store_path, :class => 'navbar-link' %> |
+      <% end %>
+      Logged in as <strong><%= current_user.email %></strong>.
+      <%= link_to 'Edit profile', edit_user_registration_path, :class => 'navbar-link' %> |
+      <%= link_to "Logout", destroy_user_session_path, method: :delete, :class => 'navbar-link'  %>
+  <% else %>
+      <%= link_to "Sign up", new_user_registration_path, :class => 'navbar-link'  %> |
+      <%= link_to "Login", new_user_session_path, :class => 'navbar-link'  %>
+  <% end %>
+</p>
+<% if notice %>
+    <p class="alert alert-success"><%= notice %></p>
+<% end %>
+<% if alert %>
+    <p class="alert alert-danger"><%= alert %></p>
+<% end %>
+
+<hr>
+
+  <%= flash[:error] %>
+  <%= flash[:success] %>
+
+
+<%= yield %>
+
+</body>
+</html>

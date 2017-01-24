@@ -1,0 +1,30 @@
+<h3>Cloths List</h3>
+<table border="1">
+  <th colspan="5">
+    Cloths in Order
+  </th>
+  <tr>
+    <td>Cloth Type</td>
+    <td>Count</td>
+    <td>Wash Type</td>
+    <td>Edit</td>
+    <td>Remove</td>
+  </tr>
+  <% if @cloths.nil? %>
+      <tr>
+        <td colspan="5">There is Nothing to display</td>
+      </tr>
+  <% else %>
+      <% @cloths.each do |cloth| %>
+          <tr>
+            <td><%= cloth.cloth_type.name %></td>
+            <td><%= cloth.count %></td>
+            <td><%= cloth.wash_type %></td>
+            <td><%= link_to 'Edit', edit_order_cloth_path(:order_id => @order.id, :id => cloth.id) %></td>
+            <td><%= link_to 'Remove', order_cloth_path(:order_id => @order.id, :id => cloth.id),
+                        method: :delete,
+                        data: { confirm: 'Are you sure?' } %></td>
+          </tr>
+      <% end %>
+  <% end %>
+</table>

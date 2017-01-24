@@ -1,0 +1,14 @@
+<h3>Edit Cloth</h3>
+
+<%= form_for @cloth, url: {action: "update"} do |f| %>
+    <%= f.label :cloth_type %>
+    <%= f.select(:cloth_type, ClothType.all.collect{|t| [t.name, t.id]}, {:selected => @cloth.cloth_type_id}) %>
+    <br>
+    <%= f.label :wash_type %>
+    <%= f.collection_select :wash_type, Cloth::WASH_TYPE, :to_s, :humanize, {:selected => @cloth.wash_type} %>
+    <br>
+    <%= f.label :count %>
+    <%= f.text_field :count, :value => @cloth.count %>
+    <br>
+    <%= f.submit "Add Cloth" %>
+<% end %>

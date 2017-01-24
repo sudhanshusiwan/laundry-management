@@ -1,0 +1,228 @@
+<% if current_user.customer? %>
+    <h3>Customer Dashboard</h3>
+    <table border="1">
+      <th colspan="3">
+        My Orders
+      </th>
+      <tr>
+        <td>Pickup Date</td>
+        <td>Pickup Time</td>
+        <td>Status</td>
+        <td>Cancel</td>
+        <td>Edit</td>
+      </tr>
+      <% if @orders.nil? %>
+        <tr>
+          <td colspan="3">There is Nothing to display</td>
+        </tr>
+      <% else %>
+          <% @orders.each do |order| %>
+              <tr>
+                <td><%= order.to_pick_date %></td>
+                <td><%= order.to_pick_time.strftime("%I:%M%p") %></td>
+                <td><%= order.status %></td>
+                <% if order.cancellable? %>
+                    <td><%= link_to 'Cancel', cancel_order_path(:id => order.id) %></td>
+                <% end %>
+                <% if order.editable? %>
+                    <td><%= link_to 'Edit Order', edit_order_path(:id => order.id) %></td>
+                <% end %>
+              </tr>
+          <% end %>
+      <% end %>
+    </table>
+
+<% elsif current_user.pickup_boy? %>
+    <h3>Pickup Boy Dashboard</h3>
+    <table border="1">
+      <th colspan="6">
+        Orders You Have To Pick/Drop to user
+      </th>
+      <tr>
+        <td>Pickup Address</td>
+        <td>Pickup Time</td>
+        <td>Pickup Date</td>
+        <td>Laundry Store Name</td>
+        <td>Dryclean Store Name</td>
+        <td>I won't Pick</td>
+        <td>Add Cloths</td>
+        <td>Mark In-store</td>
+      </tr>
+      <% if @my_pick_orders.nil? %>
+          <tr>
+            <td colspan="6">There is Nothig to display</td>
+          </tr>
+      <% else %>
+          <% @my_pick_orders.each do |order| %>
+              <tr>
+                <!-- TODO: update following line for showing address, after adding address_id to orders, to be picked time and date -->
+                <td><%= order.address.address_text %></td>
+                <td><%= order.to_pick_time.strftime("%I:%M%p") %></td>
+                <td><%= order.to_pick_date %></td>
+                <td><%= order.laundry_store.name if order.laundry_store %></td>
+                <td><%= order.dryclean_store.name if order.dryclean_store %></td>
+                <td><%= link_to 'I wont pick', wont_pick_order_path(:id => order.id) %></td>
+                <td><%= link_to 'Add Cloths', new_order_cloth_path(:order_id => order.id) %></td>
+                <% if order.picked? %>
+                    <td><%= link_to 'Mark In-store', in_store_order_path(:id => order.id) %></td>
+                <% else %>
+                  <td>Add cloths to mark order to picked</td>
+                <% end %>
+              </tr>
+          <% end %>
+      <% end %>
+    </table>
+
+    <table border="1">
+      <th colspan="5">
+        Orders You Have To Drop
+      </th>
+      <tr>
+        <td>Drop Address</td>
+        <td>Laundry Store Name</td>
+        <td>Dryclean Store Name</td>
+        <td>I won't Drop</td>
+        <td>Mark Dropped</td>
+      </tr>
+      <% if @my_drop_orders.nil? %>
+          <tr>
+            <td colspan="4">There is Nothig to display</td>
+          </tr>
+      <% else %>
+          <% @my_drop_orders.each do |order| %>
+              <tr>
+                <!-- TODO: update following line for showing address, after adding address_id to orders, to be picked time and date -->
+                <td><%= order.address.address_text %></td>
+                <td><%= order.laundry_store.name if order.laundry_store %></td>
+                <td><%= order.dryclean_store.name if order.dryclean_store %></td>
+                <td><%= link_to "I wont drop", wont_drop_order_path(:id => order.id) %></td>
+                <td><%= link_to "Dropped", dropped_order_path(:id => order.id) %></td>
+              </tr>
+          <% end %>
+      <% end %>
+    </table>
+
+    <table border="1">
+      <th colspan="6">
+        Orders Open To Pick
+      </th>
+      <tr>
+        <td>Pickup Address</td>
+        <td>Pickup Time</td>
+        <td>Pickup Date</td>
+        <td>Laundry Store Name</td>
+        <td>Dryclean Store Name</td>
+        <td>I will Pick</td>
+      </tr>
+      <% if @pick_orders.nil? %>
+          <tr>
+            <td colspan="6">There is Nothig to display</td>
+          </tr>
+      <% else %>
+          <% @pick_orders.each do |order| %>
+              <tr>
+                <!-- TODO: update following line for showing address, after adding address_id to orders, to be picked time and date -->
+                <td><%= order.address.address_text %></td>
+                <td><%= order.to_pick_time.strftime("%I:%M%p") %></td>
+                <td><%= order.to_pick_date %></td>
+                <td><%= order.laundry_store.name if order.laundry_store %></td>
+                <td><%= order.dryclean_store.name if order.dryclean_store %></td>
+                <% if order.pickable?(current_user) %>
+                    <td><%= link_to "I will pick", pick_order_path(:id => order.id) %></td>
+                <% end %>
+              </tr>
+          <% end %>
+      <% end %>
+    </table>
+
+    <table border="1">
+      <th colspan="4">
+        Orders Open To Drop
+      </th>
+      <tr>
+        <td>Drop Address</td>
+        <td>Laundry Store Name</td>
+        <td>Dryclean Store Name</td>
+        <td>I will Drop</td>
+      </tr>
+      <% if @drop_orders.nil? %>
+          <tr>
+            <td colspan="4">There is Nothig to display</td>
+          </tr>
+      <% else %>
+          <% @drop_orders.each do |order| %>
+              <tr>
+                <!-- TODO: update following line for showing address, after adding address_id to orders, to be picked time and date -->
+                <td><%= order.address.address_text %></td>
+                <td><%= order.laundry_store.name if order.laundry_store %></td>
+                <td><%= order.dryclean_store.name if order.dryclean_store %></td>
+                <% if order.droppable?(current_user) %>
+                    <td><%= link_to "I will drop", drop_order_path(:id => order.id) %></td>
+                <% end %>
+              </tr>
+          <% end %>
+      <% end %>
+    </table>
+<% elsif current_user.store_owner? %>
+    <h3>Store Owner Dashboard</h3>
+    <table border="1">
+      <th colspan="4">
+        Orders to be Served
+      </th>
+      <tr>
+        <td>Number of cloths for laundry</td>
+        <td>Number of cloths for dryclean</td>
+        <td>Status</td>
+        <td>Update Status</td>
+      </tr>
+      <% if @orders.nil? %>
+          <tr>
+            <td colspan='4'>There is Nothig to display</td>
+          </tr>
+      <% else %>
+          <% @orders.each do |order| %>
+              <tr>
+                <!-- TODO: update following line for showing address, after adding address_id to orders, to be picked time and date -->
+                <td><%= order.laundry_store ? order.laundry_store.laundry_cloths_count : 0 %></td>
+                <td><%= order.dryclean_store ? order.dryclean_store.dryclean_cloths_count : 0 %></td>
+                <td><%= order.status %></td>
+                <td><%= link_to "Washed", washed_order_path(:id => order.id) %></td>
+              </tr>
+          <% end %>
+      <% end %>
+    </table>
+<% elsif current_user.admin? %>
+    <h3>Admin Dashboard</h3>
+    <table border="1">
+      <th colspan="7">
+        All Orders
+      </th>
+      <tr>
+        <td>Order Id</td>
+        <td>Laundry Store</td>
+        <td>Dryclean Store</td>
+        <td>Order Status</td>
+        <td>Order Picker</td>
+        <td>Order Dropper</td>
+        <td>Edit Order</td>
+      </tr>
+      <% if @orders.nil? %>
+          <tr>
+            <td colspan="3">There is Nothig to display</td>
+          </tr>
+      <% else %>
+          <% @orders.each do |order| %>
+              <tr>
+                <!-- TODO: update following line for showing address, after adding address_id to orders, to be picked time and date -->
+                <td><%= order.id %></td>
+                <td><%= order.laundry_store.name if order.laundry_store %></td>
+                <td><%= order.dryclean_store.name if order.dryclean_store %></td>
+                <td><%= order.status %></td>
+                <td><%= order.picker.email if order.picker %></td>
+                <td><%= order.dropper.email if order.dropper %></td>
+                <td><%= link_to 'Edit Order', edit_order_path(:id => order.id) %></td>
+              </tr>
+          <% end %>
+      <% end %>
+    </table>
+<% end %>

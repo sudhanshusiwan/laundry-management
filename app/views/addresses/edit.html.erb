@@ -1,0 +1,20 @@
+<h3>Edit Address</h3>
+
+<%= form_for @address, url: {action: "update"} do |f| %>
+    <%= f.label :address_line_1 %>
+    <%= f.text_field :line1, :value => @address.line1 %>
+    <br>
+    <%= f.label :address_line_2 %>
+    <%= f.text_field :line2, :value => @address.line2 %>
+    <br>
+    <%= f.label :area_name %>
+    <%= f.select(:area_id,Area.all.collect{|t| [t.name, t.id]}, {:selected => @address.area_id.to_i}) %>
+    <br>
+    <%= f.label :city %>
+    <%= f.text_field :city, :value => @address.city %>
+    <br>
+    <%= f.label :pin %>
+    <%= f.text_field :pin, :value => @address.pin %>
+    <br>
+    <%= f.submit "Update Address" %>
+<% end %>

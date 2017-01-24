@@ -1,0 +1,14 @@
+<h3>Add Store</h3>
+
+<%= form_for @store, url: {action: "create"} do |f| %>
+    <%= f.label :store_name %>
+    <%= f.text_field :name %>
+    <br>
+    <%= f.label :area_name %>
+    <%= f.select(:area_id,Area.all.collect{|t| [t.name, t.id]}) %>
+    <br>
+    <%= f.label :operates_in %>
+    <%= f.select(:operations, [['Both', 'Both'], ['Laundry', 'Laundry'], ['Dryclean', 'Dryclean']]) %>
+    <br>
+    <%= f.submit "Add Store" %>
+<% end %>

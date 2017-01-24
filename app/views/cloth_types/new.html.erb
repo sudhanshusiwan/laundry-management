@@ -1,0 +1,14 @@
+<h3>Add New Cloth Type</h3>
+
+<%= form_for @cloth_type, url: {action: "create"} do |f| %>
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+    <br>
+    <%= f.label :laundry_price %>
+    <%= f.text_field :laundry_price %>
+    <br>
+    <%= f.label :dryclean_price %>
+    <%= f.text_field :dryclean_price %>
+    <br>
+    <%= f.submit "Add Cloth Type" %>
+<% end %>
